@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body style="background: #ddd6f3;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #faaca8, #ddd6f3);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #faaca8, #ddd6f3); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */">
+    
+    <div class="container" style="padding-top: 20px;">
+        <div class="jumbotron" style="background: #8e9eab;  /* fallback for old browsers */
+            background: -webkit-linear-gradient(to right, #eef2f3, #8e9eab);  /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, #eef2f3, #8e9eab); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */ ">
+          <h1 class="display-4" style="color: #870000;  /* fallback for old browsers */
+          color: -webkit-linear-gradient(to left, #190A05, #870000);  /* Chrome 10-25, Safari 5.1-6 */
+          color: linear-gradient(to left, #190A05, #870000); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+          ">Leisure Talks</h1>
+          <p class="lead" style="color: #061161;  /* fallback for old browsers */
+          color: -webkit-linear-gradient(to left, #061161, #780206);  /* Chrome 10-25, Safari 5.1-6 */
+          color: linear-gradient(to left, #061161, #780206); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+          "> Most People are Nice :) Just have a Chat !!! </p>
+        </div>
+    
+        <div class="container-fluid bg-light" id="chat" style="padding: 35px 40px 40px 30px; 
+        background: #ECE9E6;  /* fallback for old browsers */
+        background: -webkit-linear-gradient(to left, #FFFFFF, #ECE9E6);  /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to left, #FFFFFF, #ECE9E6); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        ">
+          <div class="content d-flex flex-column" id="chat-content">
+            <h3 style='color: #ccc;font-size: 30px;'>No messages yet..<br><br></h3><br>
+            <div class="message_holder"></div>
+          </div>
+          
+          <form class="tools form-row" method="POST" style="padding: 20px 0px 0px 0px;">
+            <input class="message form-control col mr-2" placeholder="Message">
+            <input class="username form-control col-2 mr-2" placeholder="From">
+            <input class="btn btn-primary" type="submit" value="Send"> 
+          </form>
+        </div>       
+      </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+    <script type="text/javascript">
+
+      var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+      socket.on( 'connect', function() {
+        socket.emit( 'my event', {
+          data: 'User Connected'
+        } )
+        var form = $( 'form' ).on( 'submit', function( e ) {
+          e.preventDefault()
+          let user_name = $( 'input.username' ).val()
+          let user_input = $( 'input.message' ).val()
+          socket.emit( 'my event', {
+            user_name : user_name,
+            message : user_input
+          } )
+          $( 'input.message' ).val( '' ).focus()
+        } )
+      } )
+
+      socket.on( 'my response', function( msg ) {
+        console.log( msg )
+        if( typeof msg.user_name !== 'undefined' ) {
+          var today = new Date();
+          var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+          $( 'h3' ).remove()
+          $( 'div.message_holder' ).append( " <div class='msg' style='padding: 1%;margin: 2%;border: 1px solid var(--blue);border-radius: 5px;color: var(--dark);width: fit-content;max-width: 100%;'> <div class='head' style=' width: 100%;color: var(--indigo);font-weight: 350;font-style: italic;font-size: 12px;'> <b>"+ msg.user_name +" </div> <p class='body' style='margin: 1% 0;font-size: 16px;'> "+ msg.message + "</p> <div class='footer' style='color: gray;font-size: 12px;'> "+ time +" </div> </div>" )
+        }
+      })
+    </script>
+</body>
+</html>
+
+<!--
+    <h3 style='color: #ccc;font-size: 30px;'>No message yet..</h3>
+    <div class="message_holder"></div>
+
+    <form action="" method="POST">
+      <input type="text" class="username" placeholder="User Name"/>
+      <input type="text" class="message" placeholder="Messages"/>
+      <input type="submit" value=" Send "/>
+    </form>
+  
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+    <script type="text/javascript">
+      var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+      socket.on( 'connect', function() {
+        socket.emit( 'my event', {
+          data: 'User Connected'
+        } )
+        var form = $( 'form' ).on( 'submit', function( e ) {
+          e.preventDefault()
+          let user_name = $( 'input.username' ).val()
+          let user_input = $( 'input.message' ).val()
+          socket.emit( 'my event', {
+            user_name : user_name,
+            message : user_input
+          } )
+          $( 'input.message' ).val( '' ).focus()
+        } )
+      } )
+
+      socket.on( 'my response', function( msg ) {
+        console.log( msg )
+        if( typeof msg.user_name !== 'undefined' ) {
+          $( 'h3' ).remove()
+          $( 'div.message_holder' ).append( '<div><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>' )
+        }
+      })
+    </script>
+-->
