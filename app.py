@@ -18,7 +18,7 @@ def handle_my_custom_event(json, methods=['GET', 'POST']): # this view receives 
     socketio.emit('my response', json, callback=messageReceived)
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True)
+    socketio.run(app)
 
 
 # https://codeburst.io/building-your-first-chat-application-using-flask-in-7-minutes-f98de4adfa5d
